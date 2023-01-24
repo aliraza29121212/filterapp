@@ -4,8 +4,14 @@ import List from "../../components/Home/List";
 import SearchBar from "../../components/Home/SearchBar";
 import { dataList } from "../../constants";
 import "./Style.css";
+import EmptyView from "../../components/common/EmptyView";
 
 const Home = () => {
+  //for empty result found
+  const [resultsFound, setResultsFound] = useState(true);
+  // for input Search bar
+  const [inputSearch, setInputSearch] = useState("");
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const handleSelectCategory = (event, value) =>
     !value ? null : setSelectedCategory(value);
@@ -73,16 +79,38 @@ const Home = () => {
       );
     }
 
+    // Price filter
+    const minPrice = selectedPrice[0];
+    const maxPrice = selectedPrice[1];
+    updatedList = updatedList.filter(
+      (item) => item.price >= minPrice && item.price <= maxPrice
+    );
+
+    //input Search filter
+    if (inputSearch) {
+      updatedList = updatedList.filter(
+        (item) =>
+          item.title.toLowerCase().search(inputSearch.toLowerCase().trim()) !==
+          -1
+      );
+    }
+
     setList(updatedList);
+
+    // for empty result
+    !updatedList.length ? setResultsFound(false) : setResultsFound(true);
   };
   useEffect(() => {
     applyFilters();
-  }, [selectedRating, selectedCategory, cusines]);
+  }, [selectedRating, selectedCategory, cusines, selectedPrice, inputSearch]);
 
   return (
     <div className="home">
       {/* {Search Bar} */}
-      <SearchBar />
+      <SearchBar
+        value={inputSearch}
+        changeInpput={(e) => setInputSearch(e.target.value)}
+      />
       <div className="home_panelList-wrap">
         <div className="home_panel-wrap">
           {/* {Side Panel} */}
@@ -99,7 +127,8 @@ const Home = () => {
         </div>
         <div className="home_list-wrap">
           {/* {List & Empty View} */}
-          <List list={list} />
+          {resultsFound ? <List list={list} /> : <EmptyView />}
+          {/* <List list={list} /> */}
         </div>
       </div>
     </div>

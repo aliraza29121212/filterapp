@@ -23,6 +23,9 @@ const SliderProton = ({ value, changePrice }) => {
   return (
     <div>
       <Slider
+        sx={{
+          color: "black",
+        }}
         value={value}
         onChange={changePrice}
         valueLabelDisplay="on"

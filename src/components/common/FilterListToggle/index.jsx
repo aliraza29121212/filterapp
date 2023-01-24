@@ -50,7 +50,13 @@ const FilterListToggle = ({ options, value, selectToggle }) => {
       // className={classes.toggle}
     >
       {options.map(({ label, id, value }) => (
-        <ToggleButton key={id} value={value}>
+        <ToggleButton
+          key={id}
+          value={value}
+          sx={{
+            color: "black",
+          }}
+        >
           {label}
         </ToggleButton>
       ))}
